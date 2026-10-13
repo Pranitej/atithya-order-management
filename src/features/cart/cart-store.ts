@@ -16,11 +16,31 @@ export type CartLine = {
 
 type CartState = {
   lines: CartLine[];
+  /** Puts a dish in the cart, or adds one more if it is already there. */
   add: (item: MenuItemDTO) => void;
+  increase: (id: string) => void;
   decrease: (id: string) => void;
   remove: (id: string) => void;
   clear: () => void;
 };
+
+/** Changes one line's quantity, capped at the maximum; a line at zero is dropped. */
+function withQuantityChanged(
+  lines: CartLine[],
+  id: string,
+  change: number,
+): CartLine[] {
+  return lines
+    .map((line) =>
+      line.id === id
+        ? {
+            ...line,
+            quantity: Math.min(line.quantity + change, MAX_QUANTITY_PER_ITEM),
+          }
+        : line,
+    )
+    .filter((line) => line.quantity > 0);
+}
 
 export function createCartStore() {
   return createStore<CartState>()(
@@ -30,41 +50,20 @@ export function createCartStore() {
 
         add: (item) =>
           set(({ lines }) => {
-            const existing = lines.find((line) => line.id === item.id);
-            if (!existing) {
-              const { id, name, price, image, isVeg } = item;
-              return {
-                lines: [
-                  ...lines,
-                  { id, name, price, image, isVeg, quantity: 1 },
-                ],
-              };
+            if (lines.some((line) => line.id === item.id)) {
+              return { lines: withQuantityChanged(lines, item.id, 1) };
             }
+            const { id, name, price, image, isVeg } = item;
             return {
-              lines: lines.map((line) =>
-                line.id === item.id
-                  ? {
-                      ...line,
-                      quantity: Math.min(
-                        line.quantity + 1,
-                        MAX_QUANTITY_PER_ITEM,
-                      ),
-                    }
-                  : line,
-              ),
+              lines: [...lines, { id, name, price, image, isVeg, quantity: 1 }],
             };
           }),
 
+        increase: (id) =>
+          set(({ lines }) => ({ lines: withQuantityChanged(lines, id, 1) })),
+
         decrease: (id) =>
-          set(({ lines }) => ({
-            lines: lines
-              .map((line) =>
-                line.id === id
-                  ? { ...line, quantity: line.quantity - 1 }
-                  : line,
-              )
-              .filter((line) => line.quantity > 0),
-          })),
+          set(({ lines }) => ({ lines: withQuantityChanged(lines, id, -1) })),
 
         remove: (id) =>
           set(({ lines }) => ({

@@ -71,6 +71,22 @@ describe("cart", () => {
     expect(cart().lines.map((line) => line.id)).toEqual(["pizza", "fries"]);
   });
 
+  it("raises the quantity of a dish already in the cart by one", () => {
+    cart().add(pizza);
+
+    cart().increase("pizza");
+
+    expect(quantityOf(cart().lines, "pizza")).toBe(2);
+  });
+
+  it("does not raise a quantity past 20", () => {
+    for (let count = 0; count < 20; count++) cart().add(pizza);
+
+    cart().increase("pizza");
+
+    expect(quantityOf(cart().lines, "pizza")).toBe(20);
+  });
+
   it("lowers the quantity by one", () => {
     cart().add(pizza);
     cart().add(pizza);
@@ -116,6 +132,7 @@ describe("cart", () => {
   it("ignores changes to an item that is not in the cart", () => {
     cart().add(pizza);
 
+    cart().increase("fries");
     cart().decrease("fries");
     cart().remove("fries");
 
