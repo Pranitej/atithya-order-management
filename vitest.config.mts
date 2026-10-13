@@ -16,6 +16,7 @@ export default defineConfig({
           name: "unit",
           environment: "node",
           include: ["src/shared/**/*.test.ts", "src/server/**/*.test.ts"],
+          setupFiles: ["tests/setup/env.ts"],
         },
       },
       {
@@ -26,7 +27,7 @@ export default defineConfig({
           environment: "node",
           include: ["tests/**/*.test.ts"],
           globalSetup: ["tests/setup/mongo.global.ts"],
-          setupFiles: ["tests/setup/api.setup.ts"],
+          setupFiles: ["tests/setup/env.ts", "tests/setup/api.setup.ts"],
         },
       },
       {
