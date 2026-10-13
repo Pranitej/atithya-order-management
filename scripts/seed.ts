@@ -15,31 +15,8 @@ import { RateLimitModel } from "@/server/models/rate-limit.model";
 import { SessionModel } from "@/server/models/session.model";
 import { UserModel } from "@/server/models/user.model";
 import { hashPassword } from "@/server/modules/auth/password";
-import { MENU_CATALOG } from "@/server/modules/menu/menu.catalog";
+import { seedMenu } from "@/server/modules/menu/menu.seed";
 import { DEMO_ACCOUNTS } from "@/shared/demo-accounts";
-
-async function seedMenu() {
-  await MenuItemModel.bulkWrite(
-    MENU_CATALOG.map((item) => ({
-      updateOne: {
-        filter: { slug: item.slug },
-        update: { $set: { ...item, isAvailable: true } },
-        upsert: true,
-      },
-    })),
-  );
-
-  // Anything no longer in the catalogue comes off the menu, but stays in the
-  // database because past orders refer to it.
-  const retired = await MenuItemModel.updateMany(
-    { slug: { $nin: MENU_CATALOG.map((item) => item.slug) } },
-    { $set: { isAvailable: false } },
-  );
-
-  console.log(
-    `Menu: ${MENU_CATALOG.length} items available, ${retired.modifiedCount} retired`,
-  );
-}
 
 async function seedDemoAccounts() {
   const accounts = [
@@ -66,14 +43,20 @@ async function seedDemoAccounts() {
 async function main() {
   await connectToDatabase();
 
-  // Create every index up front, rather than on the first request that needs one.
+  // Create every index up front, rather than on the first request that needs
+  // one. The unique index on a dish's slug is what stops the database ever
+  // holding the same dish twice.
   await Promise.all(
     [MenuItemModel, OrderModel, RateLimitModel, SessionModel, UserModel].map(
       (model) => model.syncIndexes(),
     ),
   );
 
-  await seedMenu();
+  const menu = await seedMenu();
+  console.log(
+    `Menu: ${menu.available} dishes available, ${menu.retired} taken off`,
+  );
+
   await seedDemoAccounts();
   console.log("Done.");
 }

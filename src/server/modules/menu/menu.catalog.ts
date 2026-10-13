@@ -12,6 +12,50 @@ export type CatalogItem = {
   sortOrder: number;
 };
 
+/** Capitals and spacing do not make two names different dishes. */
+function normaliseName(name: string): string {
+  return name.trim().toLowerCase().replace(/\s+/g, " ");
+}
+
+/**
+ * Lists every way a catalogue repeats itself: a slug, a name or a photo used
+ * by more than one dish. An empty list means every dish is distinct. The seed
+ * script refuses to run while this finds anything, and a test applies it to
+ * the real catalogue, so a duplicate cannot reach the menu.
+ */
+export function findCatalogProblems(catalog: readonly CatalogItem[]): string[] {
+  const problems: string[] = [];
+
+  const reportRepeats = (
+    label: string,
+    keyOf: (item: CatalogItem) => string,
+    shownAs: (item: CatalogItem) => string = keyOf,
+  ) => {
+    const uses = new Map<string, { shown: string; count: number }>();
+    for (const item of catalog) {
+      const key = keyOf(item);
+      const entry = uses.get(key) ?? { shown: shownAs(item), count: 0 };
+      entry.count += 1;
+      uses.set(key, entry);
+    }
+    for (const { shown, count } of uses.values()) {
+      if (count > 1) {
+        problems.push(`${label} "${shown}" is used by ${count} dishes`);
+      }
+    }
+  };
+
+  reportRepeats("Slug", (item) => item.slug);
+  reportRepeats(
+    "Name",
+    (item) => normaliseName(item.name),
+    (item) => item.name.trim(),
+  );
+  reportRepeats("Photo", (item) => item.image);
+
+  return problems;
+}
+
 /**
  * The kitchen's menu. `npm run seed` writes this into the database, matching
  * on `slug`, so it can be run again after an edit without creating duplicates.
