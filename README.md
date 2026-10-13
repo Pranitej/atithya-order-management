@@ -18,14 +18,14 @@ Built for the RaftLabs Senior Full Stack assessment.
 
 | Requirement                               | Where to see it                                                                                  |
 | ----------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| Menu with name, description, price, image | Home page. Thirty-two dishes in six sections, filterable.                                        |
+| Menu with name, description, price, image | Home page. Forty-three dishes in eleven sections, filterable.                                    |
 | Add to cart, change quantities            | "Add" on any dish, then the cart panel. The cart survives a reload.                              |
 | Checkout with name, address, phone        | `/checkout`. Validated in the browser and again by the API.                                      |
 | Order status                              | `/orders/:id`. Order Received, Preparing, Out for Delivery, Delivered (or Cancelled).            |
 | Real-time updates                         | The tracking page updates by itself over Server-Sent Events. The back end simulates the kitchen. |
 | REST API                                  | `/api/v1`, listed below.                                                                         |
 | Storage                                   | MongoDB.                                                                                         |
-| Tests                                     | 322 tests: API endpoints, business rules and key UI components.                                  |
+| Tests                                     | 328 tests: API endpoints, business rules and key UI components.                                  |
 
 Beyond the brief: accounts with JWT access and refresh tokens, a staff role,
 rate limiting, and a kitchen board at `/admin/orders`.

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { cn } from "@/components/ui/cn";
 import { Notice } from "@/components/ui/notice";
 import {
@@ -15,6 +15,15 @@ type Filter = MenuCategory | "all";
 
 export function MenuBrowser({ items }: { items: MenuItemDTO[] }) {
   const [filter, setFilter] = useState<Filter>("all");
+  const top = useRef<HTMLDivElement>(null);
+
+  // The menu is long. Someone who picks a section while far down the page
+  // would otherwise be left looking at whatever is now at that height, often
+  // the footer, so the start of the menu is brought back into view.
+  const choose = (next: Filter) => {
+    setFilter(next);
+    top.current?.scrollIntoView({ block: "start" });
+  };
 
   if (items.length === 0) {
     return (
@@ -33,22 +42,26 @@ export function MenuBrowser({ items }: { items: MenuItemDTO[] }) {
     filter === "all" ? sections : sections.filter((s) => s === filter);
 
   return (
-    <div>
+    // scroll-mt-16 stops the sticky site header covering the top when
+    // `choose` scrolls here.
+    <div ref={top} className="scroll-mt-16">
+      {/* Phones scroll the filters sideways; wider screens wrap them onto a
+          second row, so every section is always visible and clickable. */}
       <nav
         aria-label="Menu sections"
-        className="no-scrollbar sticky top-16 z-20 -mx-5 flex gap-1.5 overflow-x-auto border-b border-line bg-paper/95 px-5 py-3 backdrop-blur sm:mx-0 sm:px-0"
+        className="no-scrollbar sticky top-16 z-20 -mx-5 flex gap-1.5 overflow-x-auto border-b border-line bg-paper/95 px-5 py-3 backdrop-blur sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0"
       >
         <FilterButton
           label="All"
           active={filter === "all"}
-          onClick={() => setFilter("all")}
+          onClick={() => choose("all")}
         />
         {sections.map((category) => (
           <FilterButton
             key={category}
             label={CATEGORY_LABELS[category]}
             active={filter === category}
-            onClick={() => setFilter(category)}
+            onClick={() => choose(category)}
           />
         ))}
       </nav>

@@ -62,6 +62,7 @@ export function findCatalogProblems(catalog: readonly CatalogItem[]): string[] {
  * Photos are stored in /public/menu (source: Unsplash, free to use).
  */
 export const MENU_CATALOG: CatalogItem[] = [
+  // Pizza
   {
     slug: "margherita-pizza",
     name: "Margherita Pizza",
@@ -106,6 +107,7 @@ export const MENU_CATALOG: CatalogItem[] = [
     isVeg: true,
     sortOrder: 4,
   },
+  // Burgers
   {
     slug: "double-smash-burger",
     name: "Double Smash Burger",
@@ -150,6 +152,7 @@ export const MENU_CATALOG: CatalogItem[] = [
     isVeg: true,
     sortOrder: 4,
   },
+  // Indian Mains
   {
     slug: "chicken-biryani",
     name: "Hyderabadi Chicken Biryani",
@@ -157,7 +160,7 @@ export const MENU_CATALOG: CatalogItem[] = [
       "Long-grain basmati and chicken cooked dum-style with saffron, mint and fried onion.",
     price: 31900,
     image: "/menu/chicken-biryani.jpg",
-    category: "mains",
+    category: "indian",
     isVeg: false,
     sortOrder: 1,
   },
@@ -168,7 +171,7 @@ export const MENU_CATALOG: CatalogItem[] = [
       "Chicken in a smooth tomato and butter gravy, with two garlic naan.",
     price: 34900,
     image: "/menu/butter-chicken-naan.jpg",
-    category: "mains",
+    category: "indian",
     isVeg: false,
     sortOrder: 2,
   },
@@ -179,7 +182,7 @@ export const MENU_CATALOG: CatalogItem[] = [
       "Soft paneer in a mildly spiced tomato and cashew gravy, served with jeera rice.",
     price: 28900,
     image: "/menu/paneer-butter-masala.jpg",
-    category: "mains",
+    category: "indian",
     isVeg: true,
     sortOrder: 3,
   },
@@ -190,10 +193,22 @@ export const MENU_CATALOG: CatalogItem[] = [
       "Half a chicken marinated overnight in yoghurt and spices, roasted until charred.",
     price: 33900,
     image: "/menu/tandoori-chicken.jpg",
-    category: "mains",
+    category: "indian",
     isVeg: false,
     sortOrder: 4,
   },
+  {
+    slug: "north-indian-veg-thali",
+    name: "North Indian Veg Thali",
+    description:
+      "Two rotis with mixed vegetable curry, dal tadka and pickle, served on a steel thali.",
+    price: 22900,
+    image: "/menu/north-indian-veg-thali.jpg",
+    category: "indian",
+    isVeg: true,
+    sortOrder: 5,
+  },
+  // South Indian
   {
     slug: "masala-dosa",
     name: "Masala Dosa",
@@ -201,9 +216,9 @@ export const MENU_CATALOG: CatalogItem[] = [
       "A crisp rice crepe filled with spiced potato, served with sambar and chutneys.",
     price: 14900,
     image: "/menu/masala-dosa.jpg",
-    category: "mains",
+    category: "south-indian",
     isVeg: true,
-    sortOrder: 5,
+    sortOrder: 1,
   },
   {
     slug: "idli-vada-sambar",
@@ -212,10 +227,11 @@ export const MENU_CATALOG: CatalogItem[] = [
       "Steamed idlis and a crisp medu vada with sambar and coconut chutney.",
     price: 12900,
     image: "/menu/idli-vada-sambar.jpg",
-    category: "mains",
+    category: "south-indian",
     isVeg: true,
-    sortOrder: 6,
+    sortOrder: 2,
   },
+  // Chinese
   {
     slug: "veg-hakka-noodles",
     name: "Veg Hakka Noodles",
@@ -223,9 +239,9 @@ export const MENU_CATALOG: CatalogItem[] = [
       "Wok-tossed noodles with cabbage, carrot and spring onion in soy and chilli.",
     price: 18900,
     image: "/menu/veg-hakka-noodles.jpg",
-    category: "mains",
+    category: "chinese",
     isVeg: true,
-    sortOrder: 7,
+    sortOrder: 1,
   },
   {
     slug: "veg-fried-rice",
@@ -234,20 +250,101 @@ export const MENU_CATALOG: CatalogItem[] = [
       "Rice stir-fried over high heat with beans, carrot and spring onion.",
     price: 17900,
     image: "/menu/veg-fried-rice.jpg",
-    category: "mains",
+    category: "chinese",
     isVeg: true,
-    sortOrder: 8,
+    sortOrder: 2,
   },
+  {
+    slug: "steamed-veg-momos",
+    name: "Steamed Veg Momos",
+    description:
+      "Eight dumplings filled with cabbage and carrot, with a fiery tomato dip.",
+    price: 13900,
+    image: "/menu/steamed-veg-momos.jpg",
+    category: "chinese",
+    isVeg: true,
+    sortOrder: 3,
+  },
+  // Pasta
   {
     slug: "penne-arrabbiata",
     name: "Penne Arrabbiata",
     description: "Penne in a tomato sauce with garlic, chilli and basil.",
     price: 24900,
     image: "/menu/penne-arrabbiata.jpg",
-    category: "mains",
+    category: "pasta",
     isVeg: true,
-    sortOrder: 9,
+    sortOrder: 1,
   },
+  {
+    slug: "prawn-spaghetti-aglio-olio",
+    name: "Prawn Spaghetti Aglio e Olio",
+    description:
+      "Spaghetti tossed with prawns, garlic, chilli and cherry tomatoes in olive oil.",
+    price: 38900,
+    image: "/menu/prawn-spaghetti-aglio-olio.jpg",
+    category: "pasta",
+    isVeg: false,
+    sortOrder: 2,
+  },
+  // Wraps & Sandwiches
+  {
+    slug: "grilled-chicken-wrap",
+    name: "Grilled Chicken Wrap",
+    description:
+      "Spiced grilled chicken, crunchy slaw and garlic sauce rolled in a soft tortilla.",
+    price: 21900,
+    image: "/menu/grilled-chicken-wrap.jpg",
+    category: "wraps",
+    isVeg: false,
+    sortOrder: 1,
+  },
+  {
+    slug: "chickpea-tacos",
+    name: "Chickpea Tacos",
+    description:
+      "Three soft tacos with spiced chickpeas, avocado, tomato and a squeeze of lime.",
+    price: 19900,
+    image: "/menu/chickpea-tacos.jpg",
+    category: "wraps",
+    isVeg: true,
+    sortOrder: 2,
+  },
+  {
+    slug: "grilled-cheese-sandwich",
+    name: "Grilled Cheese Sandwich",
+    description:
+      "Three cheeses melted between thick slices of bread, grilled in butter.",
+    price: 14900,
+    image: "/menu/grilled-cheese-sandwich.jpg",
+    category: "wraps",
+    isVeg: true,
+    sortOrder: 3,
+  },
+  // Salads & Bowls
+  {
+    slug: "chickpea-avocado-salad",
+    name: "Chickpea and Avocado Salad",
+    description:
+      "Chickpeas, avocado, cherry tomatoes, roasted sweet potato and greens with a tahini dressing.",
+    price: 23900,
+    image: "/menu/chickpea-avocado-salad.jpg",
+    category: "salads",
+    isVeg: true,
+    sortOrder: 1,
+  },
+  {
+    slug: "grilled-chicken-protein-bowl",
+    name: "Grilled Chicken Protein Bowl",
+    description:
+      "Grilled chicken, boiled egg, sweetcorn, edamame and crunchy vegetables over greens.",
+    price: 27900,
+    image: "/menu/grilled-chicken-protein-bowl.jpg",
+    category: "salads",
+    isVeg: false,
+    sortOrder: 2,
+  },
+  // Sides
   {
     slug: "masala-fries",
     name: "Masala Fries",
@@ -292,27 +389,17 @@ export const MENU_CATALOG: CatalogItem[] = [
     sortOrder: 4,
   },
   {
-    slug: "steamed-veg-momos",
-    name: "Steamed Veg Momos",
+    slug: "loaded-chicken-nachos",
+    name: "Loaded Chicken Nachos",
     description:
-      "Eight dumplings filled with cabbage and carrot, with a fiery tomato dip.",
-    price: 13900,
-    image: "/menu/steamed-veg-momos.jpg",
+      "Tortilla chips under melted cheese, spiced chicken, salsa, jalapeños and sour cream.",
+    price: 24900,
+    image: "/menu/loaded-chicken-nachos.jpg",
     category: "sides",
-    isVeg: true,
+    isVeg: false,
     sortOrder: 5,
   },
-  {
-    slug: "grilled-cheese-sandwich",
-    name: "Grilled Cheese Sandwich",
-    description:
-      "Three cheeses melted between thick slices of bread, grilled in butter.",
-    price: 14900,
-    image: "/menu/grilled-cheese-sandwich.jpg",
-    category: "sides",
-    isVeg: true,
-    sortOrder: 6,
-  },
+  // Desserts
   {
     slug: "chocolate-brownie",
     name: "Chocolate Brownie",
@@ -354,6 +441,28 @@ export const MENU_CATALOG: CatalogItem[] = [
     isVeg: true,
     sortOrder: 4,
   },
+  {
+    slug: "banana-pancakes",
+    name: "Banana Pancakes",
+    description:
+      "A tall stack of pancakes with sliced banana and warm maple syrup.",
+    price: 16900,
+    image: "/menu/banana-pancakes.jpg",
+    category: "desserts",
+    isVeg: true,
+    sortOrder: 5,
+  },
+  {
+    slug: "strawberry-ice-cream-cone",
+    name: "Strawberry Ice Cream Cone",
+    description: "Two scoops of strawberry ice cream in a crisp waffle cone.",
+    price: 8900,
+    image: "/menu/strawberry-ice-cream-cone.jpg",
+    category: "desserts",
+    isVeg: true,
+    sortOrder: 6,
+  },
+  // Drinks
   {
     slug: "iced-coffee",
     name: "Iced Coffee",
@@ -403,5 +512,26 @@ export const MENU_CATALOG: CatalogItem[] = [
     category: "drinks",
     isVeg: true,
     sortOrder: 5,
+  },
+  {
+    slug: "cappuccino",
+    name: "Cappuccino",
+    description:
+      "A double espresso under steamed milk and a thick layer of foam.",
+    price: 12900,
+    image: "/menu/cappuccino.jpg",
+    category: "drinks",
+    isVeg: true,
+    sortOrder: 6,
+  },
+  {
+    slug: "mixed-berry-smoothie",
+    name: "Mixed Berry Smoothie",
+    description: "Strawberries, blueberries and banana blended with yoghurt.",
+    price: 17900,
+    image: "/menu/mixed-berry-smoothie.jpg",
+    category: "drinks",
+    isVeg: true,
+    sortOrder: 7,
   },
 ];

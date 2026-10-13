@@ -15,10 +15,20 @@ export type UserDTO = {
   role: UserRole;
 };
 
+/**
+ * The sections of the menu, in the order they are shown. Adding a section
+ * means adding it here and to CATEGORY_LABELS; the menu page, its filters and
+ * the database validation all follow from this one list.
+ */
 export const MENU_CATEGORIES = [
   "pizza",
   "burgers",
-  "mains",
+  "indian",
+  "south-indian",
+  "chinese",
+  "pasta",
+  "wraps",
+  "salads",
   "sides",
   "desserts",
   "drinks",
@@ -29,7 +39,12 @@ export type MenuCategory = (typeof MENU_CATEGORIES)[number];
 export const CATEGORY_LABELS: Record<MenuCategory, string> = {
   pizza: "Pizza",
   burgers: "Burgers",
-  mains: "Mains",
+  indian: "Indian Mains",
+  "south-indian": "South Indian",
+  chinese: "Chinese",
+  pasta: "Pasta",
+  wraps: "Wraps & Sandwiches",
+  salads: "Salads & Bowls",
   sides: "Sides",
   desserts: "Desserts",
   drinks: "Drinks",
