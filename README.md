@@ -18,14 +18,14 @@ Built for the RaftLabs Senior Full Stack assessment.
 
 | Requirement                               | Where to see it                                                                                  |
 | ----------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| Menu with name, description, price, image | Home page. Sixteen dishes in six sections, filterable.                                           |
+| Menu with name, description, price, image | Home page. Thirty-two dishes in six sections, filterable.                                        |
 | Add to cart, change quantities            | "Add" on any dish, then the cart panel. The cart survives a reload.                              |
 | Checkout with name, address, phone        | `/checkout`. Validated in the browser and again by the API.                                      |
 | Order status                              | `/orders/:id`. Order Received, Preparing, Out for Delivery, Delivered (or Cancelled).            |
 | Real-time updates                         | The tracking page updates by itself over Server-Sent Events. The back end simulates the kitchen. |
 | REST API                                  | `/api/v1`, listed below.                                                                         |
 | Storage                                   | MongoDB.                                                                                         |
-| Tests                                     | 302 tests: API endpoints, business rules and key UI components.                                  |
+| Tests                                     | 322 tests: API endpoints, business rules and key UI components.                                  |
 
 Beyond the brief: accounts with JWT access and refresh tokens, a staff role,
 rate limiting, and a kitchen board at `/admin/orders`.
@@ -164,6 +164,23 @@ the only thing every instance can see. For a handful of concurrent orders
 that is fine. At scale I would put a message broker (Redis pub/sub) behind
 the same `loadOrder` seam, or use MongoDB change streams, so that a write on
 one instance wakes the streams on all others.
+
+### A dish can never be on the menu twice
+
+The menu comes from one catalogue file,
+[`menu.catalog.ts`](src/server/modules/menu/menu.catalog.ts), which
+`npm run seed` writes to the database. Three things keep it free of duplicates:
+
+- The seed step refuses a catalogue that repeats a slug, a name or a photo,
+  before it writes anything.
+- Each dish is matched on its slug and updated in place, so running the seed
+  again adds nothing and a dish keeps its id (and the orders that refer to it).
+- MongoDB enforces a unique index on the slug.
+
+Tests cover each of these, and also check that every dish has its photo on
+disk and that no picture is used under two file names. The same idea holds
+further along: adding a dish to the cart twice raises its quantity instead of
+adding a second line, and the API rejects an order that lists a dish twice.
 
 ### Money and trust
 
