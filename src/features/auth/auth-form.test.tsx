@@ -96,7 +96,7 @@ describe("AuthForm signing in", () => {
 
     await waitFor(() => expect(onSuccess).toHaveBeenCalledTimes(1));
     expect(bodySentTo(fetchMock, "/api/v1/auth/login")).toEqual({
-      email: "asha@dabba.example",
+      email: "asha@atithya.example",
       password: "demo-customer-1",
     });
   });
@@ -114,7 +114,7 @@ describe("AuthForm signing in", () => {
       expect(requestsMade(fetchMock)).toEqual(["POST /api/v1/auth/login"]),
     );
     expect(bodySentTo(fetchMock, "/api/v1/auth/login").email).toBe(
-      "kitchen@dabba.example",
+      "kitchen@atithya.example",
     );
   });
 });

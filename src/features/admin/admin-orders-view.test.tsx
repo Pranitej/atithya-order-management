@@ -12,7 +12,7 @@ const admin = {
       user: {
         id: "64b7f0c2a1d3e4f5a6b7c8f0",
         name: "Kitchen Staff",
-        email: "kitchen@dabba.example",
+        email: "kitchen@atithya.example",
         role: "admin",
       },
     },
