@@ -1,3 +1,4 @@
+import { unstable_rethrow } from "next/navigation";
 import type { NextRequest } from "next/server";
 import type { z } from "zod";
 import { connectToDatabase } from "@/server/db/connect";
@@ -70,6 +71,10 @@ export function route<TBody>(
 
       return await handler({ request, params, body, user });
     } catch (error) {
+      // Next.js uses thrown errors for its own control flow (for example to
+      // stop prerendering a handler at build time). Those are not ours to
+      // handle, so they are passed straight back to the framework.
+      unstable_rethrow(error);
       return errorResponse(error);
     }
   };
