@@ -6,12 +6,12 @@
 export const DEMO_ACCOUNTS = {
   customer: {
     name: "Asha Rao",
-    email: "asha@dabba.example",
+    email: "asha@atithya.example",
     password: "demo-customer-1",
   },
   admin: {
     name: "Kitchen Staff",
-    email: "kitchen@dabba.example",
+    email: "kitchen@atithya.example",
     password: "demo-kitchen-1",
   },
 } as const;

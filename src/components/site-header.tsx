@@ -20,9 +20,9 @@ export function SiteHeader() {
         <Link
           href="/"
           className="font-display text-[1.7rem] leading-none text-leaf-900"
-          aria-label="Dabba, back to the menu"
+          aria-label="Atithya, back to the menu"
         >
-          Dabba
+          Atithya
         </Link>
 
         <nav aria-label="Main" className="flex items-center gap-1">

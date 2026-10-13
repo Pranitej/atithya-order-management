@@ -1,4 +1,4 @@
-# Dabba: order management for a food delivery app
+# Atithya: order management for a food delivery app
 
 A small, complete slice of a food delivery product: browse a menu, fill a
 cart, check out, and watch the order move from the kitchen to your door in

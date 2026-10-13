@@ -21,8 +21,8 @@ const youngSerif = Young_Serif({
 
 export const metadata: Metadata = {
   title: {
-    default: "Dabba: food from our kitchen, tracked to your door",
-    template: "%s | Dabba",
+    default: "Atithya: food from our kitchen, tracked to your door",
+    template: "%s | Atithya",
   },
   description:
     "Order pizzas, burgers and Indian mains from one kitchen and follow your order live, from the stove to your door.",
@@ -53,8 +53,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <footer className="border-t border-line">
             <div className="mx-auto max-w-6xl px-5 py-8 text-sm text-muted">
               <p>
-                Dabba is a demonstration project. No real food is cooked and no
-                payment is taken.
+                Atithya is a demonstration project. No real food is cooked and
+                no payment is taken.
               </p>
             </div>
           </footer>

@@ -73,7 +73,7 @@ export function createCartStore() {
         clear: () => set({ lines: [] }),
       }),
       {
-        name: "dabba-cart",
+        name: "atithya-cart",
         storage: createJSONStorage(() => localStorage),
         partialize: ({ lines }) => ({ lines }),
         // The server renders an empty cart. Reading localStorage only after
