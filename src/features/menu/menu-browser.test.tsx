@@ -1,8 +1,13 @@
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { cartStore } from "@/features/cart/cart-store";
-import { burger, fries, pizza } from "../../../tests/helpers/menu-fixtures";
+import {
+  burger,
+  dosa,
+  fries,
+  pizza,
+} from "../../../tests/helpers/menu-fixtures";
 import { MenuBrowser } from "./menu-browser";
 
 const dishNames = () =>
@@ -79,6 +84,18 @@ describe("MenuBrowser", () => {
     expect(dishNames()).toEqual(["Margherita Pizza", "Smash Burger"]);
   });
 
+  it("gives a cuisine such as South Indian a section and a filter of its own", () => {
+    render(<MenuBrowser items={[pizza, dosa]} />);
+
+    const southIndian = screen.getByRole("region", { name: "South Indian" });
+    expect(
+      within(southIndian).getByRole("heading", { name: "Masala Dosa" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "South Indian" }),
+    ).toBeInTheDocument();
+  });
+
   it("explains when there is nothing on the menu", () => {
     render(<MenuBrowser items={[]} />);
 
@@ -88,5 +105,35 @@ describe("MenuBrowser", () => {
     expect(
       screen.queryByRole("navigation", { name: "Menu sections" }),
     ).not.toBeInTheDocument();
+  });
+});
+
+describe("MenuBrowser on a long menu", () => {
+  const scrollIntoView = vi.fn();
+  const original = Element.prototype.scrollIntoView;
+
+  beforeEach(() => {
+    scrollIntoView.mockClear();
+    // jsdom does not implement scrolling, so the browser call is recorded.
+    Element.prototype.scrollIntoView = scrollIntoView;
+  });
+
+  afterEach(() => {
+    Element.prototype.scrollIntoView = original;
+  });
+
+  it("brings the start of the menu into view when a section is chosen", async () => {
+    const user = userEvent.setup();
+    render(<MenuBrowser items={[pizza, burger, fries]} />);
+
+    await user.click(screen.getByRole("button", { name: "Burgers" }));
+
+    expect(scrollIntoView).toHaveBeenCalledTimes(1);
+  });
+
+  it("does not move the page when the menu first appears", () => {
+    render(<MenuBrowser items={[pizza, burger, fries]} />);
+
+    expect(scrollIntoView).not.toHaveBeenCalled();
   });
 });

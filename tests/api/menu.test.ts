@@ -78,6 +78,45 @@ describe("GET /menu", () => {
     expect(names).toEqual(["Margherita", "Farmhouse", "Smash Burger", "Cola"]);
   });
 
+  it("lists the sections in the order the menu shows them", async () => {
+    // Created out of order on purpose.
+    const sections = [
+      ["drinks", "Cola"],
+      ["salads", "Greek Salad"],
+      ["pasta", "Penne"],
+      ["sides", "Fries"],
+      ["south-indian", "Dosa"],
+      ["desserts", "Brownie"],
+      ["wraps", "Chicken Wrap"],
+      ["pizza", "Margherita"],
+      ["chinese", "Hakka Noodles"],
+      ["indian", "Biryani"],
+      ["burgers", "Smash Burger"],
+    ] as const;
+    for (const [category, name] of sections) {
+      await createMenuItem({ name, category });
+    }
+
+    const response = await createTestClient().get(getMenu, MENU);
+
+    const names = response.body.data.items.map(
+      (item: { name: string }) => item.name,
+    );
+    expect(names).toEqual([
+      "Margherita",
+      "Smash Burger",
+      "Biryani",
+      "Dosa",
+      "Hakka Noodles",
+      "Penne",
+      "Chicken Wrap",
+      "Greek Salad",
+      "Fries",
+      "Brownie",
+      "Cola",
+    ]);
+  });
+
   it("returns an empty list when the menu has no items", async () => {
     const response = await createTestClient().get(getMenu, MENU);
 

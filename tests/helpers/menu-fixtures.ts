@@ -31,3 +31,13 @@ export const fries: MenuItemDTO = {
   category: "sides",
   isVeg: true,
 };
+
+export const dosa: MenuItemDTO = {
+  id: "64b7f0c2a1d3e4f5a6b7c8d4",
+  name: "Masala Dosa",
+  description: "A crisp rice crepe filled with spiced potato.",
+  price: 14900,
+  image: "/menu/masala-dosa.jpg",
+  category: "south-indian",
+  isVeg: true,
+};

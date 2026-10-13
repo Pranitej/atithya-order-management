@@ -10,7 +10,7 @@ const dosa: CatalogItem = {
   description: "A crisp rice crepe filled with spiced potato.",
   price: 14900,
   image: "/menu/masala-dosa.jpg",
-  category: "mains",
+  category: "south-indian",
   isVeg: true,
   sortOrder: 1,
 };

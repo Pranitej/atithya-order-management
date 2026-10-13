@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
+import { MENU_CATEGORIES } from "@/shared/types";
 import {
   type CatalogItem,
   MENU_CATALOG,
@@ -15,7 +16,7 @@ function dish(overrides: Partial<CatalogItem>): CatalogItem {
     description: "A crisp rice crepe filled with spiced potato.",
     price: 14900,
     image: "/menu/masala-dosa.jpg",
-    category: "mains",
+    category: "south-indian",
     isVeg: true,
     sortOrder: 1,
     ...overrides,
@@ -97,6 +98,25 @@ describe("findCatalogProblems", () => {
 describe("the real menu catalogue", () => {
   it("has no duplicated dish, name or photo", () => {
     expect(findCatalogProblems(MENU_CATALOG)).toEqual([]);
+  });
+
+  it("leaves no section of the menu without a dish", () => {
+    const emptySections = MENU_CATEGORIES.filter(
+      (category) => !MENU_CATALOG.some((item) => item.category === category),
+    );
+
+    expect(emptySections).toEqual([]);
+  });
+
+  it("gives each dish its own position within its section", () => {
+    const positions = MENU_CATALOG.map(
+      (item) => `${item.category} #${item.sortOrder}`,
+    );
+    const repeated = positions.filter(
+      (position, index) => positions.indexOf(position) !== index,
+    );
+
+    expect(repeated).toEqual([]);
   });
 
   it("has a photo on disk for every dish", () => {
