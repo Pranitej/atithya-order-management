@@ -49,7 +49,7 @@ export function MenuBrowser({ items }: { items: MenuItemDTO[] }) {
           second row, so every section is always visible and clickable. */}
       <nav
         aria-label="Menu sections"
-        className="no-scrollbar sticky top-16 z-20 -mx-5 flex gap-1.5 overflow-x-auto border-b border-line bg-paper/95 px-5 py-3 backdrop-blur sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0"
+        className="no-scrollbar sticky top-16 z-20 -mx-5 flex gap-1.5 overflow-x-auto border-b border-line bg-paper px-5 py-3 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0"
       >
         <FilterButton
           label="All"

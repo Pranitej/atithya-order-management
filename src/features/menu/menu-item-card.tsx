@@ -33,7 +33,9 @@ export function MenuItemCard({ item }: { item: MenuItemDTO }) {
         </p>
       </div>
 
-      <div className="relative mb-4 shrink-0">
+      {/* self-start keeps this box the height of the photo, so the control
+          below stays on the photo's edge however long the text beside it is. */}
+      <div className="relative mb-4 shrink-0 self-start">
         <Image
           src={item.image}
           alt={item.name}
