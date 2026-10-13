@@ -13,7 +13,9 @@ describe("parseEnv", () => {
   });
 
   it("reads the step duration as a number", () => {
-    expect(parseEnv({ ...complete, ORDER_STEP_SECONDS: "45" }).ORDER_STEP_SECONDS).toBe(45);
+    expect(
+      parseEnv({ ...complete, ORDER_STEP_SECONDS: "45" }).ORDER_STEP_SECONDS,
+    ).toBe(45);
   });
 
   it("names the variable that is missing", () => {

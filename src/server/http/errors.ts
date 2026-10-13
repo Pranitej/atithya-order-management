@@ -22,7 +22,8 @@ export const errors = {
   validation: (details: Record<string, string[]>) =>
     new AppError(400, "VALIDATION_ERROR", "Some fields are invalid", details),
 
-  unauthenticated: () => new AppError(401, "UNAUTHENTICATED", "Sign in to continue"),
+  unauthenticated: () =>
+    new AppError(401, "UNAUTHENTICATED", "Sign in to continue"),
 
   invalidCredentials: () =>
     new AppError(401, "INVALID_CREDENTIALS", "Email or password is incorrect"),
@@ -30,7 +31,8 @@ export const errors = {
   forbidden: (message = "You are not allowed to do that") =>
     new AppError(403, "FORBIDDEN", message),
 
-  notFound: (what: string) => new AppError(404, "NOT_FOUND", `${what} not found`),
+  notFound: (what: string) =>
+    new AppError(404, "NOT_FOUND", `${what} not found`),
 
   conflict: (code: string, message: string) => new AppError(409, code, message),
 

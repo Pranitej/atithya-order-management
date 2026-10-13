@@ -39,7 +39,9 @@ export function createTestClient() {
 
   function storeCookies(setCookies: string[]) {
     for (const header of setCookies) {
-      const [pair, ...attributes] = header.split(";").map((part) => part.trim());
+      const [pair, ...attributes] = header
+        .split(";")
+        .map((part) => part.trim());
       const separator = pair.indexOf("=");
       const name = pair.slice(0, separator);
       const value = pair.slice(separator + 1);

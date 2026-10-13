@@ -24,7 +24,10 @@ describe("access tokens", () => {
   it("carry the user's id and role", async () => {
     const token = await signAccessToken({ userId: USER_ID, role: "admin" });
 
-    expect(await verifyAccessToken(token)).toEqual({ userId: USER_ID, role: "admin" });
+    expect(await verifyAccessToken(token)).toEqual({
+      userId: USER_ID,
+      role: "admin",
+    });
   });
 
   it("are still valid 14 minutes after being issued", async () => {
@@ -74,7 +77,11 @@ describe("access tokens", () => {
 });
 
 describe("refresh tokens", () => {
-  const claims = { userId: USER_ID, sessionId: "session-1", tokenId: "token-1" };
+  const claims = {
+    userId: USER_ID,
+    sessionId: "session-1",
+    tokenId: "token-1",
+  };
 
   it("carry the user, session and token ids", async () => {
     const token = await signRefreshToken(claims);

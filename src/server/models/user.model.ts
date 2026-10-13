@@ -16,12 +16,24 @@ const userSchema = new Schema<UserDoc>(
     name: { type: String, required: true, trim: true },
     // The unique index is what actually prevents duplicate accounts; a
     // check-then-insert in application code would race.
-    email: { type: String, required: true, unique: true, lowercase: true, trim: true },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true,
+    },
     passwordHash: { type: String, required: true },
-    role: { type: String, enum: ["customer", "admin"], required: true, default: "customer" },
+    role: {
+      type: String,
+      enum: ["customer", "admin"],
+      required: true,
+      default: "customer",
+    },
   },
   { timestamps: true },
 );
 
 export const UserModel: Model<UserDoc> =
-  (models.User as Model<UserDoc> | undefined) ?? model<UserDoc>("User", userSchema);
+  (models.User as Model<UserDoc> | undefined) ??
+  model<UserDoc>("User", userSchema);

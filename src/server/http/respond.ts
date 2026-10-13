@@ -29,7 +29,12 @@ export function errorResponse(error: unknown): NextResponse<ApiErrorBody> {
   // Unexpected: log the real cause for us, tell the client nothing about it.
   console.error("Unhandled error in route handler", error);
   return NextResponse.json(
-    { error: { code: "INTERNAL_ERROR", message: "Something went wrong on our side" } },
+    {
+      error: {
+        code: "INTERNAL_ERROR",
+        message: "Something went wrong on our side",
+      },
+    },
     { status: 500 },
   );
 }

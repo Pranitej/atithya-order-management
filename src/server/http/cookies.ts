@@ -38,7 +38,11 @@ export function setAuthCookies<T extends NextResponse>(
 }
 
 export function clearAuthCookies<T extends NextResponse>(response: T): T {
-  response.cookies.set(ACCESS_COOKIE, "", { ...baseOptions(), path: "/", maxAge: 0 });
+  response.cookies.set(ACCESS_COOKIE, "", {
+    ...baseOptions(),
+    path: "/",
+    maxAge: 0,
+  });
   response.cookies.set(REFRESH_COOKIE, "", {
     ...baseOptions(),
     path: REFRESH_COOKIE_PATH,

@@ -255,7 +255,11 @@ describe("POST /auth/refresh", () => {
   it("is refused when handed an access token instead", async () => {
     const client = createTestClient();
     await registerAsha(client);
-    client.setCookie(REFRESH_COOKIE, client.cookie(ACCESS_COOKIE)!, "/api/v1/auth");
+    client.setCookie(
+      REFRESH_COOKIE,
+      client.cookie(ACCESS_COOKIE)!,
+      "/api/v1/auth",
+    );
 
     expect((await client.post(refresh, REFRESH)).status).toBe(401);
   });

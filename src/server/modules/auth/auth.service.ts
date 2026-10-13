@@ -43,7 +43,10 @@ export async function registerUser(input: RegisterInput): Promise<AuthResult> {
     return await startSession(user);
   } catch (error) {
     if ((error as { code?: number }).code === DUPLICATE_KEY) {
-      throw errors.conflict("EMAIL_TAKEN", "An account with this email already exists");
+      throw errors.conflict(
+        "EMAIL_TAKEN",
+        "An account with this email already exists",
+      );
     }
     throw error;
   }
@@ -72,7 +75,8 @@ export async function refreshSession(
   refreshToken: string | undefined,
 ): Promise<AuthResult> {
   const claims = refreshToken ? await verifyRefreshToken(refreshToken) : null;
-  if (!claims || !isValidObjectId(claims.sessionId)) throw errors.unauthenticated();
+  if (!claims || !isValidObjectId(claims.sessionId))
+    throw errors.unauthenticated();
 
   const nextTokenId = randomUUID();
 
@@ -104,11 +108,16 @@ export async function refreshSession(
   };
 }
 
-export async function endSession(refreshToken: string | undefined): Promise<void> {
+export async function endSession(
+  refreshToken: string | undefined,
+): Promise<void> {
   const claims = refreshToken ? await verifyRefreshToken(refreshToken) : null;
   if (!claims || !isValidObjectId(claims.sessionId)) return;
 
-  await SessionModel.deleteOne({ _id: claims.sessionId, userId: claims.userId });
+  await SessionModel.deleteOne({
+    _id: claims.sessionId,
+    userId: claims.userId,
+  });
 }
 
 export async function getUserById(userId: string): Promise<UserDTO | null> {

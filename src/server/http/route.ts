@@ -1,9 +1,13 @@
 import type { NextRequest } from "next/server";
 import type { z } from "zod";
 import { connectToDatabase } from "@/server/db/connect";
-import { type AccessClaims, verifyAccessToken } from "@/server/modules/auth/tokens";
+import {
+  type AccessClaims,
+  verifyAccessToken,
+} from "@/server/modules/auth/tokens";
 import { ACCESS_COOKIE } from "./cookies";
 import { errors } from "./errors";
+import { type RateLimitRule, enforceRateLimit } from "./rate-limit";
 import { errorResponse } from "./respond";
 
 type RouteParams = Record<string, string>;
@@ -13,6 +17,8 @@ type RouteOptions<TBody> = {
   auth?: "user" | "admin";
   /** When given, the JSON body is parsed with this schema before the handler runs. */
   body?: z.ZodType<TBody>;
+  /** Per-client request allowance, checked before anything expensive runs. */
+  rateLimit?: RateLimitRule;
 };
 
 type HandlerContext<TBody, TUser> = {
@@ -31,8 +37,8 @@ const SAFE_METHODS = new Set(["GET", "HEAD", "OPTIONS"]);
 
 /**
  * Wraps a route handler with everything every endpoint needs, in one place:
- * CSRF origin check, database connection, authentication, body validation
- * and consistent error responses. Handlers are left with only their own logic.
+ * CSRF origin check, database connection, rate limiting, authentication,
+ * body validation and consistent error responses. Handlers are left with only their own logic.
  */
 export function route<TBody = undefined>(
   options: RouteOptions<TBody> & { auth: "user" | "admin" },
@@ -52,8 +58,11 @@ export function route<TBody>(
     try {
       assertSameOrigin(request);
       await connectToDatabase();
+      if (options.rateLimit) await enforceRateLimit(request, options.rateLimit);
 
-      const user = options.auth ? await authenticate(request, options.auth) : null;
+      const user = options.auth
+        ? await authenticate(request, options.auth)
+        : null;
       const body = options.body
         ? await parseBody(request, options.body)
         : (undefined as TBody);

@@ -16,7 +16,12 @@ export type SessionDoc = {
 
 const sessionSchema = new Schema<SessionDoc>(
   {
-    userId: { type: Schema.Types.ObjectId, ref: "User", required: true, index: true },
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+      index: true,
+    },
     tokenHash: { type: String, required: true },
     expiresAt: { type: Date, required: true },
   },

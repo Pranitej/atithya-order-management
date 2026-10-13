@@ -1,3 +1,4 @@
+import "server-only";
 import mongoose from "mongoose";
 import { getEnv } from "@/server/config/env";
 

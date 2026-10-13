@@ -17,7 +17,10 @@ const validCustomer = {
 };
 
 /** Paths of every issue, e.g. ["customer.phone"], so tests don't depend on message wording. */
-function issuePaths(result: { success: boolean; error?: { issues: { path: PropertyKey[] }[] } }) {
+function issuePaths(result: {
+  success: boolean;
+  error?: { issues: { path: PropertyKey[] }[] };
+}) {
   return result.error?.issues.map((issue) => issue.path.join(".")) ?? [];
 }
 
@@ -47,13 +50,19 @@ describe("deliveryDetailsSchema", () => {
   });
 
   it("rejects a name that is only whitespace", () => {
-    const result = deliveryDetailsSchema.safeParse({ ...validCustomer, name: "   " });
+    const result = deliveryDetailsSchema.safeParse({
+      ...validCustomer,
+      name: "   ",
+    });
 
     expect(issuePaths(result)).toEqual(["name"]);
   });
 
   it("rejects an address too short to deliver to", () => {
-    const result = deliveryDetailsSchema.safeParse({ ...validCustomer, address: "Flat 2" });
+    const result = deliveryDetailsSchema.safeParse({
+      ...validCustomer,
+      address: "Flat 2",
+    });
 
     expect(issuePaths(result)).toEqual(["address"]);
   });
@@ -61,7 +70,10 @@ describe("deliveryDetailsSchema", () => {
   it.each(["12345", "phone-number", "+91 98765 4321x", "1234567890123456"])(
     "rejects the phone number %s",
     (phone) => {
-      const result = deliveryDetailsSchema.safeParse({ ...validCustomer, phone });
+      const result = deliveryDetailsSchema.safeParse({
+        ...validCustomer,
+        phone,
+      });
 
       expect(issuePaths(result)).toEqual(["phone"]);
     },
@@ -139,7 +151,11 @@ describe("createOrderSchema", () => {
   });
 
   it("drops fields the client is not allowed to set", () => {
-    const parsed = createOrderSchema.parse({ ...validOrder, total: 1, status: "delivered" });
+    const parsed = createOrderSchema.parse({
+      ...validOrder,
+      total: 1,
+      status: "delivered",
+    });
 
     expect(parsed).not.toHaveProperty("total");
     expect(parsed).not.toHaveProperty("status");
@@ -177,13 +193,19 @@ describe("registerSchema", () => {
   });
 
   it("rejects a malformed email", () => {
-    const result = registerSchema.safeParse({ ...validRegistration, email: "asha@" });
+    const result = registerSchema.safeParse({
+      ...validRegistration,
+      email: "asha@",
+    });
 
     expect(issuePaths(result)).toEqual(["email"]);
   });
 
   it("rejects a password shorter than 8 characters", () => {
-    const result = registerSchema.safeParse({ ...validRegistration, password: "short12" });
+    const result = registerSchema.safeParse({
+      ...validRegistration,
+      password: "short12",
+    });
 
     expect(issuePaths(result)).toEqual(["password"]);
   });
@@ -200,13 +222,19 @@ describe("registerSchema", () => {
 
 describe("loginSchema", () => {
   it("lowercases the email", () => {
-    const parsed = loginSchema.parse({ email: "Asha@Example.com", password: "whatever" });
+    const parsed = loginSchema.parse({
+      email: "Asha@Example.com",
+      password: "whatever",
+    });
 
     expect(parsed.email).toBe("asha@example.com");
   });
 
   it("rejects an empty password", () => {
-    const result = loginSchema.safeParse({ email: "asha@example.com", password: "" });
+    const result = loginSchema.safeParse({
+      email: "asha@example.com",
+      password: "",
+    });
 
     expect(issuePaths(result)).toEqual(["password"]);
   });

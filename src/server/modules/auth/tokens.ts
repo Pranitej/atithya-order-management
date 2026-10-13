@@ -80,7 +80,11 @@ export async function verifyRefreshToken(
     if (!payload.sub || !payload.jti || typeof payload.sid !== "string") {
       return null;
     }
-    return { userId: payload.sub, sessionId: payload.sid, tokenId: payload.jti };
+    return {
+      userId: payload.sub,
+      sessionId: payload.sid,
+      tokenId: payload.jti,
+    };
   } catch {
     return null;
   }

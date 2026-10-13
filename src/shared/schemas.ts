@@ -9,9 +9,7 @@ import { ORDER_STATUSES } from "./order-status";
 export const MAX_QUANTITY_PER_ITEM = 20;
 export const MAX_ITEMS_PER_ORDER = 30;
 
-const objectId = z
-  .string()
-  .regex(/^[a-f\d]{24}$/i, "Invalid id");
+const objectId = z.string().regex(/^[a-f\d]{24}$/i, "Invalid id");
 
 const email = z
   .string()
@@ -49,7 +47,10 @@ export const orderItemSchema = z.object({
     .number()
     .int("Quantity must be a whole number")
     .min(1, "Quantity must be at least 1")
-    .max(MAX_QUANTITY_PER_ITEM, `You can order at most ${MAX_QUANTITY_PER_ITEM} of one item`),
+    .max(
+      MAX_QUANTITY_PER_ITEM,
+      `You can order at most ${MAX_QUANTITY_PER_ITEM} of one item`,
+    ),
 });
 
 export const createOrderSchema = z.object({
@@ -78,11 +79,7 @@ export const updateOrderStatusSchema = z.object({
 });
 
 export const registerSchema = z.object({
-  name: z
-    .string()
-    .trim()
-    .min(2, "Enter your name")
-    .max(80, "Name is too long"),
+  name: z.string().trim().min(2, "Enter your name").max(80, "Name is too long"),
   email,
   // bcrypt only hashes the first 72 bytes, so longer passwords are refused
   // rather than silently truncated.

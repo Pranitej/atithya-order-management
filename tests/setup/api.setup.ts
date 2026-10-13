@@ -9,7 +9,9 @@ beforeAll(async () => {
   const { connectToDatabase } = await import("@/server/db/connect");
   await connectToDatabase();
   // Unique indexes must exist before tests rely on them rejecting duplicates.
-  await Promise.all(Object.values(mongoose.models).map((model) => model.init()));
+  await Promise.all(
+    Object.values(mongoose.models).map((model) => model.init()),
+  );
 });
 
 beforeEach(async () => {
