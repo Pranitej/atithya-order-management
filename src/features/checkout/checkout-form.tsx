@@ -1,9 +1,9 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { TextAreaField, TextField } from "@/components/ui/field";
+import { zodFormResolver } from "@/lib/zod-form-resolver";
 import {
   type DeliveryDetails,
   type DeliveryDetailsInput,
@@ -30,7 +30,7 @@ export function CheckoutForm({
     formState: { errors },
   } = useForm<DeliveryDetailsInput, unknown, DeliveryDetails>({
     // The same schema the API validates with, so the two can never disagree.
-    resolver: zodResolver(deliveryDetailsSchema),
+    resolver: zodFormResolver(deliveryDetailsSchema),
     defaultValues: { name: defaultName, address: "", phone: "" },
   });
 

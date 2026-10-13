@@ -1,9 +1,9 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { TextField } from "@/components/ui/field";
+import { zodFormResolver } from "@/lib/zod-form-resolver";
 import { DEMO_ACCOUNTS } from "@/shared/demo-accounts";
 import {
   type RegisterInput,
@@ -37,7 +37,9 @@ export function AuthForm({
     formState: { errors },
   } = useForm<RegisterInput>({
     // Signing in has no name field, so only its own schema is applied.
-    resolver: zodResolver(isRegister ? registerSchema : loginSchema) as never,
+    resolver: zodFormResolver(
+      (isRegister ? registerSchema : loginSchema) as typeof registerSchema,
+    ),
     defaultValues: { name: "", email: "", password: "" },
   });
 
