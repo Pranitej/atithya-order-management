@@ -1,24 +1,27 @@
 @import "tailwindcss";
 
 /*
- * Design tokens. The palette comes from the food itself: banana-leaf green
- * for the brand and ink, turmeric for the one accent, chili for warnings.
+ * Design tokens. The palette is taken from the Atithya logo: its deep green
+ * (leaf-900) for the brand and its gold (gold-500) for the one accent, with
+ * the lighter and darker steps built around those two. Chili is for warnings.
  * Components use these names (bg-leaf-900, text-muted, border-line) and
  * never raw hex values.
  */
 @theme {
-  --color-leaf-950: #0a2a20;
-  --color-leaf-900: #0e3b2e;
-  --color-leaf-800: #14503d;
-  --color-leaf-700: #1b664e;
+  --color-leaf-950: #02241a;
+  --color-leaf-900: #043022;
+  --color-leaf-800: #0a4331;
+  --color-leaf-700: #136046;
   --color-leaf-200: #c3dccd;
   --color-leaf-100: #ddebe2;
   --color-leaf-50: #eff5f1;
 
-  --color-turmeric-600: #d99a06;
-  --color-turmeric-500: #f4b41a;
-  --color-turmeric-300: #fad570;
-  --color-turmeric-100: #fcefc6;
+  /* gold-600 is dark enough to be seen as a small dot on white (3.6:1).
+     Text on gold is always ink, never white. */
+  --color-gold-600: #a67f3c;
+  --color-gold-500: #c19852;
+  --color-gold-300: #dfc898;
+  --color-gold-100: #f6eedd;
 
   --color-chili-700: #a3271a;
   --color-chili-600: #c4321e;
@@ -80,7 +83,6 @@
 
 @layer base {
   html {
-    scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
   }
 
@@ -100,15 +102,11 @@
   }
 
   ::selection {
-    background-color: var(--color-turmeric-300);
+    background-color: var(--color-gold-300);
     color: var(--color-ink);
   }
 
   @media (prefers-reduced-motion: reduce) {
-    html {
-      scroll-behavior: auto;
-    }
-
     *,
     *::before,
     *::after {

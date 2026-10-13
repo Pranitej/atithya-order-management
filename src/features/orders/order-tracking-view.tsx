@@ -201,7 +201,7 @@ function LiveIndicator({ state }: { state: LiveState }) {
         aria-hidden="true"
         className={cn(
           "size-2 rounded-full",
-          state === "live" ? "bg-leaf-700" : "bg-turmeric-500",
+          state === "live" ? "bg-leaf-700" : "bg-gold-600",
           state === "paused" && "bg-chili-600",
         )}
       />

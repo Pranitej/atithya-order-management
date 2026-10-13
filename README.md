@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="src/app/opengraph-image.png" alt="Atithya: good food feels like home" width="560">
+</p>
+
 # Atithya: order management for a food delivery app
 
 A small, complete slice of a food delivery product: browse a menu, fill a

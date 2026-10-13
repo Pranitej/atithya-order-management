@@ -2,8 +2,8 @@ import { type OrderStatus, STATUS_LABELS } from "@/shared/order-status";
 import { cn } from "./cn";
 
 const styles: Record<OrderStatus, string> = {
-  received: "bg-turmeric-100 text-ink",
-  preparing: "bg-turmeric-100 text-ink",
+  received: "bg-gold-100 text-ink",
+  preparing: "bg-gold-100 text-ink",
   out_for_delivery: "bg-leaf-100 text-leaf-900",
   delivered: "bg-leaf-900 text-white",
   cancelled: "bg-chili-50 text-chili-700",

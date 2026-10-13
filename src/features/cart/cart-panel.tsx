@@ -45,7 +45,7 @@ export function CartPanel({ onNavigate }: CartPanelProps) {
 
       <div className="border-t border-line bg-mist px-5 pt-4 pb-5">
         {awayFromFreeDelivery > 0 && (
-          <p className="mb-3 rounded-lg bg-turmeric-100 px-3 py-2 text-sm font-medium">
+          <p className="mb-3 rounded-lg bg-gold-100 px-3 py-2 text-sm font-medium">
             Add {formatPrice(awayFromFreeDelivery)} more for free delivery
           </p>
         )}

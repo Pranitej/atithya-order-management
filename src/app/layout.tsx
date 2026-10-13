@@ -19,17 +19,34 @@ const youngSerif = Young_Serif({
   display: "swap",
 });
 
+const description =
+  "Order pizzas, burgers and Indian mains from one kitchen and follow your order live, from the stove to your door.";
+
+// Link previews need absolute image URLs. Vercel provides the production
+// domain at build time; locally it falls back to the dev server.
+const siteUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
+  ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+  : "http://localhost:3000";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: {
-    default: "Atithya: food from our kitchen, tracked to your door",
+    default: "Atithya: good food feels like home",
     template: "%s | Atithya",
   },
-  description:
-    "Order pizzas, burgers and Indian mains from one kitchen and follow your order live, from the stove to your door.",
+  description,
+  // The preview image itself comes from app/opengraph-image.png.
+  openGraph: {
+    type: "website",
+    siteName: "Atithya",
+    title: "Atithya: good food feels like home",
+    description,
+  },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0e3b2e",
+  // The logo's green, so the browser chrome on phones matches the brand.
+  themeColor: "#043022",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

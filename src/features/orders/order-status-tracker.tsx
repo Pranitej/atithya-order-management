@@ -164,9 +164,9 @@ function Marker({ state }: { state: StepState }) {
       <span className="relative grid size-7 place-items-center">
         <span
           aria-hidden="true"
-          className="absolute size-3.5 animate-pulse-ring rounded-full bg-turmeric-500"
+          className="absolute size-3.5 animate-pulse-ring rounded-full bg-gold-500"
         />
-        <span className="relative size-3.5 rounded-full bg-turmeric-500 ring-4 ring-turmeric-100" />
+        <span className="relative size-3.5 rounded-full bg-gold-600 ring-4 ring-gold-100" />
       </span>
     );
   }

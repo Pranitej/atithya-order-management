@@ -19,7 +19,7 @@ export default function MenuPage() {
         <div className="relative mx-auto flex max-w-6xl flex-col px-5 pt-12 pb-14 sm:pt-16 sm:pb-20 md:min-h-[22rem] md:justify-center">
           <div className="relative z-10 max-w-xl">
             <h1 className="font-display text-[2.6rem] leading-[1.05] text-balance sm:text-6xl">
-              Good food, delivered hot.
+              Good food feels like home.
             </h1>
             <p className="mt-5 max-w-md text-lg leading-relaxed text-leaf-100">
               Cooked to order in one kitchen and followed live to your door.
@@ -33,12 +33,11 @@ export default function MenuPage() {
             aria-hidden="true"
             className="pointer-events-none absolute top-1/2 -right-24 hidden size-[26rem] -translate-y-1/2 md:block lg:-right-10 lg:size-[30rem]"
           >
-            <div className="absolute -inset-5 rounded-full bg-turmeric-500" />
+            <div className="absolute -inset-5 rounded-full bg-gold-500" />
             <Image
               src="/hero-biryani.jpg"
               alt=""
               fill
-              priority
               sizes="480px"
               className="rounded-full object-cover"
             />

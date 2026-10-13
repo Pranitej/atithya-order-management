@@ -15,8 +15,7 @@ export const buttonStyles = cva(
         primary: "bg-leaf-900 text-white hover:bg-leaf-800 active:bg-leaf-950",
         secondary:
           "border border-leaf-900/25 bg-paper text-leaf-900 hover:bg-leaf-50 active:bg-leaf-100",
-        accent:
-          "bg-turmeric-500 text-ink hover:bg-turmeric-300 active:bg-turmeric-600",
+        accent: "bg-gold-500 text-ink hover:bg-gold-300 active:bg-gold-600",
         ghost: "text-leaf-900 hover:bg-leaf-50 active:bg-leaf-100",
         danger:
           "border border-chili-600/30 bg-paper text-chili-700 hover:bg-chili-50",
