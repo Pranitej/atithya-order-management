@@ -12,8 +12,9 @@ type UserReply = { user: UserDTO };
 /** The signed-in user, or null for a visitor. Being signed out is not an error. */
 async function getCurrentUser(): Promise<UserDTO | null> {
   try {
-    return (await api.get<UserReply>("/auth/me")).user;
+    return (await api.get<{ user: UserDTO | null }>("/auth/me")).user;
   } catch (error) {
+    // The session had expired and could not be renewed.
     if (error instanceof ApiError && error.status === 401) return null;
     throw error;
   }

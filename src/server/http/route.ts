@@ -14,8 +14,12 @@ import { errorResponse } from "./respond";
 type RouteParams = Record<string, string>;
 
 type RouteOptions<TBody> = {
-  /** Omit for a public endpoint. "admin" also requires the admin role. */
-  auth?: "user" | "admin";
+  /**
+   * Omit for a public endpoint. "user" requires a signed-in account and
+   * "admin" also requires the admin role. "optional" identifies the caller
+   * if they are signed in, and lets visitors through as null.
+   */
+  auth?: "user" | "admin" | "optional";
   /** When given, the JSON body is parsed with this schema before the handler runs. */
   body?: z.ZodType<TBody>;
   /** Per-client request allowance, checked before anything expensive runs. */
@@ -39,11 +43,18 @@ const SAFE_METHODS = new Set(["GET", "HEAD", "OPTIONS"]);
 /**
  * Wraps a route handler with everything every endpoint needs, in one place:
  * CSRF origin check, database connection, rate limiting, authentication,
- * body validation and consistent error responses. Handlers are left with only their own logic.
+ * body validation and consistent error responses. Handlers are left with
+ * only their own logic.
  */
 export function route<TBody = undefined>(
   options: RouteOptions<TBody> & { auth: "user" | "admin" },
   handler: (context: HandlerContext<TBody, AccessClaims>) => Promise<Response>,
+): NextRouteHandler;
+export function route<TBody = undefined>(
+  options: RouteOptions<TBody> & { auth: "optional" },
+  handler: (
+    context: HandlerContext<TBody, AccessClaims | null>,
+  ) => Promise<Response>,
 ): NextRouteHandler;
 export function route<TBody = undefined>(
   options: RouteOptions<TBody> & { auth?: undefined },
@@ -61,9 +72,7 @@ export function route<TBody>(
       await connectToDatabase();
       if (options.rateLimit) await enforceRateLimit(request, options.rateLimit);
 
-      const user = options.auth
-        ? await authenticate(request, options.auth)
-        : null;
+      const user = await identify(request, options.auth);
       const body = options.body
         ? await parseBody(request, options.body)
         : (undefined as TBody);
@@ -107,12 +116,15 @@ function assertSameOrigin(request: NextRequest): void {
   }
 }
 
-async function authenticate(
+async function identify(
   request: NextRequest,
-  level: "user" | "admin",
-): Promise<AccessClaims> {
+  level: RouteOptions<unknown>["auth"],
+): Promise<AccessClaims | null> {
+  if (!level) return null;
+
   const token = request.cookies.get(ACCESS_COOKIE)?.value;
   const claims = token ? await verifyAccessToken(token) : null;
+  if (level === "optional") return claims;
 
   if (!claims) throw errors.unauthenticated();
   if (level === "admin" && claims.role !== "admin") throw errors.forbidden();

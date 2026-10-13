@@ -19,7 +19,10 @@ describe("parseEnv", () => {
   });
 
   it("names the variable that is missing", () => {
-    const { MONGODB_URI: _omitted, ...withoutDatabase } = complete;
+    const withoutDatabase = {
+      JWT_ACCESS_SECRET: complete.JWT_ACCESS_SECRET,
+      JWT_REFRESH_SECRET: complete.JWT_REFRESH_SECRET,
+    };
 
     expect(() => parseEnv(withoutDatabase)).toThrow(/MONGODB_URI/);
   });

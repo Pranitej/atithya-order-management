@@ -177,14 +177,25 @@ describe("GET /auth/me", () => {
     expect(response.body.data.user.email).toBe("asha@example.com");
   });
 
-  it("is refused without a session", async () => {
+  it("tells a visitor with no session that nobody is signed in", async () => {
     const response = await createTestClient().get(me, ME);
 
-    expect(response.status).toBe(401);
-    expect(response.body.error.code).toBe("UNAUTHENTICATED");
+    // Not an error: being signed out is an ordinary state for a visitor.
+    expect(response.status).toBe(200);
+    expect(response.body.data.user).toBeNull();
   });
 
-  it("is refused once the access token has expired", async () => {
+  it("reports nobody signed in for a token that was never valid", async () => {
+    const client = createTestClient();
+    client.setCookie(ACCESS_COOKIE, "forged.token.value");
+
+    const response = await client.get(me, ME);
+
+    expect(response.status).toBe(200);
+    expect(response.body.data.user).toBeNull();
+  });
+
+  it("asks the browser to refresh when the access token has expired but a refresh token remains", async () => {
     vi.useFakeTimers({ toFake: ["Date"] });
     const client = createTestClient();
     await registerAsha(client);
