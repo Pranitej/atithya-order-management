@@ -1,26 +1,111 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/*
+ * Design tokens. The palette comes from the food itself: banana-leaf green
+ * for the brand and ink, turmeric for the one accent, chili for warnings.
+ * Components use these names (bg-leaf-900, text-muted, border-line) and
+ * never raw hex values.
+ */
+@theme {
+  --color-leaf-950: #0a2a20;
+  --color-leaf-900: #0e3b2e;
+  --color-leaf-800: #14503d;
+  --color-leaf-700: #1b664e;
+  --color-leaf-200: #c3dccd;
+  --color-leaf-100: #ddebe2;
+  --color-leaf-50: #eff5f1;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-turmeric-600: #d99a06;
+  --color-turmeric-500: #f4b41a;
+  --color-turmeric-300: #fad570;
+  --color-turmeric-100: #fcefc6;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  --color-chili-700: #a3271a;
+  --color-chili-600: #c4321e;
+  --color-chili-50: #fbece9;
+
+  --color-ink: #13231c;
+  --color-muted: #55665d;
+  --color-line: #dce4de;
+  --color-mist: #f4f7f4;
+  --color-paper: #ffffff;
+
+  --font-sans:
+    var(--font-anek), ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    sans-serif;
+  --font-display: var(--font-young-serif), ui-serif, Georgia, serif;
+
+  --animate-pulse-ring: pulse-ring 1.8s cubic-bezier(0.2, 0.6, 0.3, 1) infinite;
+  --animate-sheet-in: sheet-in 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  --animate-fade-in: fade-in 160ms ease-out;
+
+  @keyframes pulse-ring {
+    0% {
+      transform: scale(1);
+      opacity: 0.55;
+    }
+    100% {
+      transform: scale(2.6);
+      opacity: 0;
+    }
+  }
+
+  @keyframes sheet-in {
+    from {
+      transform: translateX(100%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.55;
+  }
+
+  /* One visible, consistent keyboard focus style for every control. */
+  :focus-visible {
+    outline: 2px solid var(--color-leaf-700);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  ::selection {
+    background-color: var(--color-turmeric-300);
+    color: var(--color-ink);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
 }
