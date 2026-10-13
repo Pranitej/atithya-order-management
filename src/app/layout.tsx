@@ -22,11 +22,14 @@ const youngSerif = Young_Serif({
 const description =
   "Order pizzas, burgers and Indian mains from one kitchen and follow your order live, from the stove to your door.";
 
-// Link previews need absolute image URLs. Vercel provides the production
-// domain at build time; locally it falls back to the dev server.
-const siteUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
-  ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-  : "http://localhost:3000";
+// Link previews need absolute image URLs, so the site has to know its own
+// public address: SITE_URL when set, otherwise the domain Vercel reports at
+// build time, otherwise the local dev server.
+const siteUrl =
+  process.env.SITE_URL ??
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : "http://localhost:3000");
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),

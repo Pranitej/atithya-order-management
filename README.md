@@ -10,7 +10,7 @@ real time. Staff get a board where they can move orders along by hand.
 
 Built for the RaftLabs Senior Full Stack assessment.
 
-- **Live app:** _added after deployment_
+- **Live app:** https://atithya-kitchen.vercel.app
 - **Demo accounts:** on the sign-in page, "Continue as demo customer" and
   "Continue as kitchen staff" sign you in with one click.
 
@@ -54,12 +54,22 @@ npm run dev                  # http://localhost:3000
 
 ### Environment variables
 
-| Name                 | Required | Purpose                                                             |
-| -------------------- | -------- | ------------------------------------------------------------------- |
-| `MONGODB_URI`        | yes      | MongoDB connection string                                           |
-| `JWT_ACCESS_SECRET`  | yes      | Signs access tokens. At least 32 characters.                        |
-| `JWT_REFRESH_SECRET` | yes      | Signs refresh tokens. At least 32 characters, different from above. |
-| `ORDER_STEP_SECONDS` | no       | Seconds a simulated order spends in each status. Default 20.        |
+| Name                 | Required | Purpose                                                                                     |
+| -------------------- | -------- | ------------------------------------------------------------------------------------------- |
+| `MONGODB_URI`        | yes      | MongoDB connection string                                                                   |
+| `JWT_ACCESS_SECRET`  | yes      | Signs access tokens. At least 32 characters.                                                |
+| `JWT_REFRESH_SECRET` | yes      | Signs refresh tokens. At least 32 characters, different from above.                         |
+| `ORDER_STEP_SECONDS` | no       | Seconds a simulated order spends in each status. Default 20.                                |
+| `SITE_URL`           | no       | Public address of the site, used for link previews. Vercel's own domain is used when unset. |
+
+### Deployment
+
+Hosted on Vercel, which deploys automatically on every push to `main`.
+[`vercel.json`](vercel.json) pins the server code to Vercel's Mumbai region
+because the MongoDB Atlas cluster is in India. Vercel's default region is in
+the US, which would add an intercontinental round trip to every database
+query. Atlas has to allow connections from anywhere (`0.0.0.0/0`), because
+Vercel's outgoing addresses are not fixed.
 
 ## Architecture
 
