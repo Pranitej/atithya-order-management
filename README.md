@@ -28,7 +28,7 @@ rate limiting, and a kitchen board at `/admin/orders`.
 
 ## Run it locally
 
-You need Node.js 20.9 or newer and a MongoDB connection string
+You need Node.js 22.12 or newer and a MongoDB connection string
 (a free MongoDB Atlas cluster works, as does a local server).
 
 ```bash
