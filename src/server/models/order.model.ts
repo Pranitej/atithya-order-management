@@ -26,6 +26,11 @@ export type OrderDoc = {
   total: number;
   status: OrderStatus;
   statusHistory: StatusChange[];
+  /**
+   * When the simulated kitchen is due to move this order to its next status.
+   * Null once the order is delivered or cancelled.
+   */
+  nextTransitionAt: Date | null;
   createdAt: Date;
   updatedAt: Date;
 };
@@ -62,6 +67,7 @@ const orderSchema = new Schema<OrderDoc>({
       at: { type: Date, required: true },
     },
   ],
+  nextTransitionAt: { type: Date, default: null },
   // Set explicitly rather than by Mongoose, so that a status change and its
   // history entry always carry exactly the same timestamp.
   createdAt: { type: Date, required: true },
@@ -71,6 +77,8 @@ const orderSchema = new Schema<OrderDoc>({
 // "My orders, newest first" and the admin board's newest-first listing.
 orderSchema.index({ userId: 1, createdAt: -1 });
 orderSchema.index({ status: 1, createdAt: -1 });
+// Finding the orders whose next simulated step is due.
+orderSchema.index({ status: 1, nextTransitionAt: 1 });
 
 export const OrderModel: Model<OrderDoc> =
   (models.Order as Model<OrderDoc> | undefined) ??

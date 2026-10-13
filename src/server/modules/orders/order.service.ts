@@ -12,9 +12,16 @@ import { calculateTotals } from "@/shared/pricing";
 import type { CreateOrderInput } from "@/shared/schemas";
 import type { OrderDTO, UserRole } from "@/shared/types";
 import {
+  estimateDelivery,
+  isDue,
+  nextTransitionAfter,
+  stepMs,
+} from "./order-simulation";
+import {
   findOrderById,
   findOrders,
   insertOrder,
+  settleDueOrders,
   transitionOrder,
 } from "./order.repository";
 
@@ -49,7 +56,7 @@ export function toOrderDTO(order: OrderDoc): OrderDTO {
       status: change.status,
       at: change.at.toISOString(),
     })),
-    estimatedDeliveryAt: null,
+    estimatedDeliveryAt: estimateDelivery(order)?.toISOString() ?? null,
     createdAt: order.createdAt.toISOString(),
     updatedAt: order.updatedAt.toISOString(),
   };
@@ -97,6 +104,7 @@ export async function placeOrder(
     ...calculateTotals(lines),
     status: "received",
     statusHistory: [{ status: "received", at: now }],
+    nextTransitionAt: nextTransitionAfter("received", now),
     createdAt: now,
     updatedAt: now,
   });
@@ -116,6 +124,11 @@ export async function listOrders(
   filter: { status?: OrderStatus },
 ): Promise<OrderDTO[]> {
   const scope = actor.role === "admin" ? {} : { userId: actor.userId };
+
+  // Bring the orders in scope up to date first, so the status filter and the
+  // statuses returned reflect the simulated kitchen as of now.
+  await settleDueOrders(new Date(), stepMs(), scope);
+
   const orders = await findOrders({ ...scope, ...filter });
   return orders.map(toOrderDTO);
 }
@@ -160,6 +173,10 @@ export async function cancelOrder(
 }
 
 /**
+ * Loads an order the actor is allowed to see, brought up to date with the
+ * simulation. Every read and every rule check goes through here, so decisions
+ * are always made against the order's true current status.
+ *
  * Customers may only see their own orders. Someone else's order is reported
  * as "not found" rather than "forbidden", so ids cannot be probed.
  */
@@ -167,12 +184,20 @@ async function loadVisibleOrder(
   actor: Actor,
   orderId: string,
 ): Promise<OrderDoc> {
-  const order = await findOrderById(orderId);
-  const visible =
-    order !== null &&
-    (actor.role === "admin" || order.userId.toString() === actor.userId);
+  let order = await findOrderById(orderId);
 
-  if (!visible) throw errors.notFound("Order");
+  if (order && isDue(order, new Date())) {
+    await settleDueOrders(new Date(), stepMs(), { id: orderId });
+    order = await findOrderById(orderId);
+  }
+
+  if (
+    order === null ||
+    (actor.role !== "admin" && order.userId.toString() !== actor.userId)
+  ) {
+    throw errors.notFound("Order");
+  }
+
   return order;
 }
 
@@ -180,18 +205,21 @@ async function applyTransition(
   order: OrderDoc,
   to: OrderStatus,
 ): Promise<OrderDTO> {
-  const updated = await transitionOrder(
-    order._id.toString(),
-    order.status,
+  const now = new Date();
+  const updated = await transitionOrder({
+    id: order._id.toString(),
+    from: order.status,
     to,
-    new Date(),
-  );
+    at: now,
+    nextTransitionAt: nextTransitionAfter(to, now),
+  });
 
-  // Someone else changed the order between our read and our write.
+  // Someone else (or the simulation) changed the order between our read and
+  // our write.
   if (!updated) {
     throw errors.conflict(
       "INVALID_STATUS_TRANSITION",
-      "This order was just updated by someone else. Refresh and try again.",
+      "This order was just updated. Refresh and try again.",
     );
   }
 
