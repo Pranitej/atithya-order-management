@@ -115,6 +115,15 @@ async function authenticate(
   return claims;
 }
 
+/** Validates the query string with a schema, reporting bad values per field. */
+export function parseQuery<TQuery>(
+  request: NextRequest,
+  schema: z.ZodType<TQuery>,
+): TQuery {
+  const query = Object.fromEntries(request.nextUrl.searchParams);
+  return validate(query, schema);
+}
+
 async function parseBody<TBody>(
   request: NextRequest,
   schema: z.ZodType<TBody>,
@@ -126,7 +135,11 @@ async function parseBody<TBody>(
     throw errors.badRequest("Request body must be valid JSON");
   }
 
-  const result = schema.safeParse(json);
+  return validate(json, schema);
+}
+
+function validate<T>(input: unknown, schema: z.ZodType<T>): T {
+  const result = schema.safeParse(input);
   if (!result.success) {
     const details: Record<string, string[]> = {};
     for (const issue of result.error.issues) {

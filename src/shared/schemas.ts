@@ -78,6 +78,11 @@ export const updateOrderStatusSchema = z.object({
   status: z.enum(ORDER_STATUSES),
 });
 
+/** Query string of the order list: `?status=preparing`. */
+export const listOrdersQuerySchema = z.object({
+  status: z.enum(ORDER_STATUSES).optional(),
+});
+
 export const registerSchema = z.object({
   name: z.string().trim().min(2, "Enter your name").max(80, "Name is too long"),
   email,
