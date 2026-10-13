@@ -25,7 +25,7 @@ Built for the RaftLabs Senior Full Stack assessment.
 | Real-time updates                         | The tracking page updates by itself over Server-Sent Events. The back end simulates the kitchen. |
 | REST API                                  | `/api/v1`, listed below.                                                                         |
 | Storage                                   | MongoDB.                                                                                         |
-| Tests                                     | 328 tests: API endpoints, business rules and key UI components.                                  |
+| Tests                                     | 335 tests: API endpoints, business rules and key UI components.                                  |
 
 Beyond the brief: accounts with JWT access and refresh tokens, a staff role,
 rate limiting, and a kitchen board at `/admin/orders`.

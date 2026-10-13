@@ -157,8 +157,8 @@ describe("MenuBrowser section strip", () => {
   }
 
   const strip = () => screen.getByRole("navigation", { name: "Menu sections" });
-  const forward = () => screen.queryByLabelText("Show more sections");
-  const back = () => screen.queryByLabelText("Show earlier sections");
+  const forward = () => screen.queryByTitle("Show more sections");
+  const back = () => screen.queryByTitle("Show earlier sections");
 
   afterEach(() => {
     vi.restoreAllMocks();
@@ -192,7 +192,7 @@ describe("MenuBrowser section strip", () => {
     await user.click(forward()!);
 
     expect(scrollBy).toHaveBeenCalledTimes(1);
-    const [{ left }] = scrollBy.mock.calls[0] as [ScrollToOptions];
+    const [{ left }] = scrollBy.mock.calls[0] as unknown as [ScrollToOptions];
     expect(left).toBeGreaterThan(0);
   });
 
@@ -224,7 +224,7 @@ describe("MenuBrowser section strip", () => {
 
     await user.click(back()!);
 
-    const [{ left }] = scrollBy.mock.calls[0] as [ScrollToOptions];
+    const [{ left }] = scrollBy.mock.calls[0] as unknown as [ScrollToOptions];
     expect(left).toBeLessThan(0);
   });
 

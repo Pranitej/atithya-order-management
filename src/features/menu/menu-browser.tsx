@@ -1,26 +1,23 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { cn } from "@/components/ui/cn";
 import { Notice } from "@/components/ui/notice";
 import {
   CATEGORY_LABELS,
   MENU_CATEGORIES,
-  type MenuCategory,
   type MenuItemDTO,
 } from "@/shared/types";
 import { MenuItemCard } from "./menu-item-card";
-
-type Filter = MenuCategory | "all";
+import { type SectionFilter, SectionStrip } from "./section-strip";
 
 export function MenuBrowser({ items }: { items: MenuItemDTO[] }) {
-  const [filter, setFilter] = useState<Filter>("all");
+  const [filter, setFilter] = useState<SectionFilter>("all");
   const top = useRef<HTMLDivElement>(null);
 
   // The menu is long. Someone who picks a section while far down the page
   // would otherwise be left looking at whatever is now at that height, often
   // the footer, so the start of the menu is brought back into view.
-  const choose = (next: Filter) => {
+  const choose = (next: SectionFilter) => {
     setFilter(next);
     top.current?.scrollIntoView({ block: "start" });
   };
@@ -45,26 +42,17 @@ export function MenuBrowser({ items }: { items: MenuItemDTO[] }) {
     // scroll-mt-16 stops the sticky site header covering the top when
     // `choose` scrolls here.
     <div ref={top} className="scroll-mt-16">
-      {/* Phones scroll the filters sideways; wider screens wrap them onto a
-          second row, so every section is always visible and clickable. */}
-      <nav
-        aria-label="Menu sections"
-        className="no-scrollbar sticky top-16 z-20 -mx-5 flex gap-1.5 overflow-x-auto border-b border-line bg-paper px-5 py-3 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0"
-      >
-        <FilterButton
-          label="All"
-          active={filter === "all"}
-          onClick={() => choose("all")}
-        />
-        {sections.map((category) => (
-          <FilterButton
-            key={category}
-            label={CATEGORY_LABELS[category]}
-            active={filter === category}
-            onClick={() => choose(category)}
-          />
-        ))}
-      </nav>
+      <SectionStrip
+        selected={filter}
+        onSelect={choose}
+        options={[
+          { value: "all", label: "All" },
+          ...sections.map((category) => ({
+            value: category,
+            label: CATEGORY_LABELS[category],
+          })),
+        ]}
+      />
 
       {visibleSections.map((category) => (
         <section
@@ -88,31 +76,5 @@ export function MenuBrowser({ items }: { items: MenuItemDTO[] }) {
         </section>
       ))}
     </div>
-  );
-}
-
-function FilterButton({
-  label,
-  active,
-  onClick,
-}: {
-  label: string;
-  active: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      aria-pressed={active}
-      onClick={onClick}
-      className={cn(
-        "h-10 shrink-0 rounded-full px-4 font-semibold transition-colors",
-        active
-          ? "bg-leaf-900 text-white"
-          : "text-muted hover:bg-leaf-50 hover:text-ink",
-      )}
-    >
-      {label}
-    </button>
   );
 }
