@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
   DELETE as cancelOrder,
   GET as getOrder,
@@ -242,6 +242,9 @@ describe("POST /orders", () => {
   });
 
   it("limits how many orders one address can place per minute", async () => {
+    // Frozen mid-minute, so all the orders fall in one counting window.
+    vi.useFakeTimers({ toFake: ["Date"] });
+    vi.setSystemTime(new Date("2026-01-01T10:00:20Z"));
     const { client } = await signUpCustomer();
     const headers = { "x-forwarded-for": "203.0.113.50" };
 

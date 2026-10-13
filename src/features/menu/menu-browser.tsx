@@ -36,7 +36,7 @@ export function MenuBrowser({ items }: { items: MenuItemDTO[] }) {
     <div>
       <nav
         aria-label="Menu sections"
-        className="sticky top-16 z-20 -mx-5 flex gap-1.5 overflow-x-auto border-b border-line bg-paper/95 px-5 py-3 backdrop-blur sm:mx-0 sm:px-0"
+        className="no-scrollbar sticky top-16 z-20 -mx-5 flex gap-1.5 overflow-x-auto border-b border-line bg-paper/95 px-5 py-3 backdrop-blur sm:mx-0 sm:px-0"
       >
         <FilterButton
           label="All"

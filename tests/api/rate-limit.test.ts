@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { POST as login } from "@/app/api/v1/auth/login/route";
 import { createTestClient } from "../helpers/http";
 
@@ -19,6 +19,13 @@ async function exhaustLimitFrom(ip: string) {
   }
 }
 
+// The limiter counts per clock minute. Freezing the clock mid-minute keeps a
+// test from straddling two minutes and seeing its attempts split between them.
+beforeEach(() => {
+  vi.useFakeTimers({ toFake: ["Date"] });
+  vi.setSystemTime(new Date("2026-01-01T10:00:20Z"));
+});
+
 describe("rate limiting on sign-in", () => {
   it("blocks the 11th attempt from one address within a minute", async () => {
     await exhaustLimitFrom("203.0.113.7");
@@ -30,9 +37,7 @@ describe("rate limiting on sign-in", () => {
   });
 
   it("tells the client how many seconds to wait", async () => {
-    vi.useFakeTimers({ toFake: ["Date"] });
-    // 20 seconds into a one-minute window, so 40 seconds remain.
-    vi.setSystemTime(new Date("2026-01-01T10:00:20Z"));
+    // The clock is 20 seconds into a one-minute window, so 40 seconds remain.
     await exhaustLimitFrom("203.0.113.7");
 
     const blocked = await attemptLoginFrom("203.0.113.7");
@@ -57,8 +62,6 @@ describe("rate limiting on sign-in", () => {
   });
 
   it("allows attempts again once the minute has passed", async () => {
-    vi.useFakeTimers({ toFake: ["Date"] });
-    vi.setSystemTime(new Date("2026-01-01T10:00:00Z"));
     await exhaustLimitFrom("203.0.113.7");
     expect((await attemptLoginFrom("203.0.113.7")).status).toBe(429);
 

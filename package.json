@@ -1,5 +1,5 @@
 {
-  "name": "food-order-app",
+  "name": "dabba-order-management",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -29,7 +29,6 @@
     "react-dom": "19.3.0",
     "react-hook-form": "^7.90.0",
     "server-only": "^0.0.1",
-    "sonner": "^2.0.8",
     "tailwind-merge": "^3.7.0",
     "zod": "^4.6.7",
     "zustand": "^5.0.15"
@@ -53,5 +52,8 @@
     "tsx": "^4.23.15",
     "typescript": "^5",
     "vitest": "^5.0.4"
+  },
+  "engines": {
+    "node": ">=20.9"
   }
 }
