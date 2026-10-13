@@ -1,4 +1,4 @@
-import { render, screen, within } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { cartStore } from "@/features/cart/cart-store";
@@ -135,5 +135,118 @@ describe("MenuBrowser on a long menu", () => {
     render(<MenuBrowser items={[pizza, burger, fries]} />);
 
     expect(scrollIntoView).not.toHaveBeenCalled();
+  });
+});
+
+describe("MenuBrowser section strip", () => {
+  const isStrip = (element: Element) =>
+    element.getAttribute("aria-label") === "Menu sections";
+
+  /** jsdom has no layout, so the strip's sizes are supplied by hand. */
+  function givenStripLayout(layout: { visible: number; total: number }) {
+    vi.spyOn(Element.prototype, "clientWidth", "get").mockImplementation(
+      function (this: Element) {
+        return isStrip(this) ? layout.visible : 0;
+      },
+    );
+    vi.spyOn(Element.prototype, "scrollWidth", "get").mockImplementation(
+      function (this: Element) {
+        return isStrip(this) ? layout.total : 0;
+      },
+    );
+  }
+
+  const strip = () => screen.getByRole("navigation", { name: "Menu sections" });
+  const forward = () => screen.queryByLabelText("Show more sections");
+  const back = () => screen.queryByLabelText("Show earlier sections");
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it("shows no arrows when every section fits", () => {
+    givenStripLayout({ visible: 900, total: 900 });
+
+    render(<MenuBrowser items={[pizza, burger, fries]} />);
+
+    expect(forward()).not.toBeInTheDocument();
+    expect(back()).not.toBeInTheDocument();
+  });
+
+  it("offers an arrow towards the sections that do not fit", () => {
+    givenStripLayout({ visible: 300, total: 900 });
+
+    render(<MenuBrowser items={[pizza, burger, fries]} />);
+
+    expect(forward()).toBeInTheDocument();
+    // Nothing is hidden to the left yet.
+    expect(back()).not.toBeInTheDocument();
+  });
+
+  it("scrolls the strip forward when that arrow is used", async () => {
+    const user = userEvent.setup();
+    givenStripLayout({ visible: 300, total: 900 });
+    const scrollBy = vi.spyOn(Element.prototype, "scrollBy");
+    render(<MenuBrowser items={[pizza, burger, fries]} />);
+
+    await user.click(forward()!);
+
+    expect(scrollBy).toHaveBeenCalledTimes(1);
+    const [{ left }] = scrollBy.mock.calls[0] as [ScrollToOptions];
+    expect(left).toBeGreaterThan(0);
+  });
+
+  it("offers the way back once the strip has been scrolled along", () => {
+    givenStripLayout({ visible: 300, total: 900 });
+    render(<MenuBrowser items={[pizza, burger, fries]} />);
+
+    // Scrolled all the way to the end: 600 + 300 visible = 900.
+    Object.defineProperty(strip(), "scrollLeft", {
+      configurable: true,
+      value: 600,
+    });
+    fireEvent.scroll(strip());
+
+    expect(back()).toBeInTheDocument();
+    expect(forward()).not.toBeInTheDocument();
+  });
+
+  it("scrolls the strip backward when the back arrow is used", async () => {
+    const user = userEvent.setup();
+    givenStripLayout({ visible: 300, total: 900 });
+    const scrollBy = vi.spyOn(Element.prototype, "scrollBy");
+    render(<MenuBrowser items={[pizza, burger, fries]} />);
+    Object.defineProperty(strip(), "scrollLeft", {
+      configurable: true,
+      value: 300,
+    });
+    fireEvent.scroll(strip());
+
+    await user.click(back()!);
+
+    const [{ left }] = scrollBy.mock.calls[0] as [ScrollToOptions];
+    expect(left).toBeLessThan(0);
+  });
+
+  it("keeps the arrows out of the list of sections", () => {
+    givenStripLayout({ visible: 300, total: 900 });
+
+    render(<MenuBrowser items={[pizza, burger, fries]} />);
+
+    const sectionButtons = within(strip())
+      .getAllByRole("button")
+      .map((button) => button.textContent);
+    expect(sectionButtons).toEqual(["All", "Pizza", "Burgers", "Sides"]);
+  });
+
+  it("moves the strip so the chosen section's button stays in view", async () => {
+    const user = userEvent.setup();
+    givenStripLayout({ visible: 300, total: 900 });
+    const scrollTo = vi.spyOn(Element.prototype, "scrollTo");
+    render(<MenuBrowser items={[pizza, burger, fries]} />);
+
+    await user.click(screen.getByRole("button", { name: "Sides" }));
+
+    expect(scrollTo).toHaveBeenCalledTimes(1);
   });
 });
