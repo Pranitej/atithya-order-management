@@ -129,4 +129,17 @@ describe("MenuItemCard", () => {
       screen.getByRole("button", { name: "Add one more Margherita Pizza" }),
     ).toBeDisabled();
   });
+
+  it("says the cart is full instead of offering a 31st dish", () => {
+    for (let n = 0; n < 30; n++) {
+      cartStore.getState().add({ ...burger, id: `dish-${n}` });
+    }
+
+    render(<MenuItemCard item={pizza} />);
+
+    expect(screen.getByRole("button", { name: "Cart full" })).toBeDisabled();
+    expect(
+      screen.queryByRole("button", { name: "Add Margherita Pizza to cart" }),
+    ).not.toBeInTheDocument();
+  });
 });

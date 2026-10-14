@@ -4,6 +4,7 @@ import {
   cartCount,
   cartSubtotal,
   createCartStore,
+  isCartFull,
   quantityOf,
 } from "./cart-store";
 
@@ -137,6 +138,21 @@ describe("cart", () => {
     cart().remove("fries");
 
     expect(cart().lines).toHaveLength(1);
+  });
+
+  it("holds at most 30 different dishes, as an order can", () => {
+    for (let n = 0; n < 31; n++) cart().add({ ...pizza, id: `dish-${n}` });
+
+    expect(cart().lines).toHaveLength(30);
+    expect(isCartFull(cart().lines)).toBe(true);
+  });
+
+  it("still raises the quantity of a dish already in a full cart", () => {
+    for (let n = 0; n < 30; n++) cart().add({ ...pizza, id: `dish-${n}` });
+
+    cart().add({ ...pizza, id: "dish-0" });
+
+    expect(quantityOf(cart().lines, "dish-0")).toBe(2);
   });
 });
 

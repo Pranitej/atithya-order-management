@@ -132,6 +132,33 @@ describe("CheckoutView", () => {
     expect(push).not.toHaveBeenCalled();
   });
 
+  it("explains a refusal of the order as a whole", async () => {
+    const user = userEvent.setup();
+    cartStore.getState().add(pizza);
+    mockApi({
+      "GET /api/v1/auth/me": signedInAsAsha,
+      "POST /api/v1/orders": {
+        status: 400,
+        body: {
+          error: {
+            code: "VALIDATION_ERROR",
+            message: "Some fields are invalid",
+            details: { items: ["Too many different items in one order"] },
+          },
+        },
+      },
+    });
+    renderWithProviders(<CheckoutView />);
+
+    await fillDeliveryDetails(user);
+    await user.click(screen.getByRole("button", { name: "Place order" }));
+
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "Too many different items in one order",
+    );
+    expect(push).not.toHaveBeenCalled();
+  });
+
   it("shows what is being ordered and the bill", async () => {
     cartStore.getState().add(pizza);
     cartStore.getState().add(pizza);
