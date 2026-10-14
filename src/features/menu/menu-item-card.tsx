@@ -4,10 +4,13 @@ import { Plus } from "lucide-react";
 import Image from "next/image";
 import { QuantityStepper } from "@/components/ui/quantity-stepper";
 import { VegMark } from "@/components/ui/veg-mark";
-import { quantityOf, useCart } from "@/features/cart/cart-store";
+import { isCartFull, quantityOf, useCart } from "@/features/cart/cart-store";
 import { formatPrice } from "@/shared/money";
-import { MAX_QUANTITY_PER_ITEM } from "@/shared/schemas";
+import { MAX_ITEMS_PER_ORDER, MAX_QUANTITY_PER_ITEM } from "@/shared/schemas";
 import type { MenuItemDTO } from "@/shared/types";
+
+const addButtonStyles =
+  "inline-flex h-10 items-center gap-1 rounded-xl border border-leaf-900/15 bg-paper pr-4 pl-3 font-semibold text-leaf-900 shadow-[0_6px_16px_-8px_rgb(10_42_32/0.5)] transition-colors hover:bg-leaf-50 active:bg-leaf-100 disabled:cursor-not-allowed disabled:opacity-55 disabled:hover:bg-paper";
 
 /**
  * One dish on the menu, laid out like a line on a printed menu: words on the
@@ -15,6 +18,7 @@ import type { MenuItemDTO } from "@/shared/types";
  */
 export function MenuItemCard({ item }: { item: MenuItemDTO }) {
   const quantity = useCart((cart) => quantityOf(cart.lines, item.id));
+  const cartFull = useCart((cart) => isCartFull(cart.lines));
   const add = useCart((cart) => cart.add);
   const decrease = useCart((cart) => cart.decrease);
 
@@ -45,17 +49,7 @@ export function MenuItemCard({ item }: { item: MenuItemDTO }) {
           className="size-32 rounded-2xl bg-leaf-50 object-cover sm:size-36"
         />
         <div className="absolute inset-x-0 -bottom-4 flex justify-center">
-          {quantity === 0 ? (
-            <button
-              type="button"
-              onClick={() => add(item)}
-              aria-label={`Add ${item.name} to cart`}
-              className="inline-flex h-10 items-center gap-1 rounded-xl border border-leaf-900/15 bg-paper pr-4 pl-3 font-semibold text-leaf-900 shadow-[0_6px_16px_-8px_rgb(10_42_32/0.5)] transition-colors hover:bg-leaf-50 active:bg-leaf-100"
-            >
-              <Plus className="size-4" aria-hidden="true" />
-              Add
-            </button>
-          ) : (
+          {quantity > 0 ? (
             <QuantityStepper
               itemName={item.name}
               quantity={quantity}
@@ -64,6 +58,25 @@ export function MenuItemCard({ item }: { item: MenuItemDTO }) {
               onDecrease={() => decrease(item.id)}
               className="shadow-[0_6px_16px_-8px_rgb(10_42_32/0.6)]"
             />
+          ) : cartFull ? (
+            <button
+              type="button"
+              disabled
+              title={`An order can have up to ${MAX_ITEMS_PER_ORDER} different dishes`}
+              className={addButtonStyles}
+            >
+              Cart full
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={() => add(item)}
+              aria-label={`Add ${item.name} to cart`}
+              className={addButtonStyles}
+            >
+              <Plus className="size-4" aria-hidden="true" />
+              Add
+            </button>
           )}
         </div>
       </div>

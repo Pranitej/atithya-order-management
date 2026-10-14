@@ -1,7 +1,7 @@
 import { useStore } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { createStore } from "zustand/vanilla";
-import { MAX_QUANTITY_PER_ITEM } from "@/shared/schemas";
+import { MAX_ITEMS_PER_ORDER, MAX_QUANTITY_PER_ITEM } from "@/shared/schemas";
 import type { MenuItemDTO } from "@/shared/types";
 
 export type CartLine = {
@@ -49,10 +49,12 @@ export function createCartStore() {
         lines: [],
 
         add: (item) =>
-          set(({ lines }) => {
+          set((state) => {
+            const { lines } = state;
             if (lines.some((line) => line.id === item.id)) {
               return { lines: withQuantityChanged(lines, item.id, 1) };
             }
+            if (isCartFull(lines)) return state;
             const { id, name, price, image, isVeg } = item;
             return {
               lines: [...lines, { id, name, price, image, isVeg, quantity: 1 }],
@@ -101,4 +103,9 @@ export function cartSubtotal(lines: readonly CartLine[]): number {
 
 export function quantityOf(lines: readonly CartLine[], id: string): number {
   return lines.find((line) => line.id === id)?.quantity ?? 0;
+}
+
+/** An order can hold only so many different dishes, and the API refuses more. */
+export function isCartFull(lines: readonly CartLine[]): boolean {
+  return lines.length >= MAX_ITEMS_PER_ORDER;
 }

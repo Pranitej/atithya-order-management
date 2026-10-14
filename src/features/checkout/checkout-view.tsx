@@ -35,6 +35,10 @@ function describeFailure(error: Error, lines: CartLine[]): string | null {
     return `${unavailable.join(" and ")} is no longer available. Remove it from your cart to continue.`;
   }
 
+  // A refusal of the order as a whole, such as too many different dishes.
+  const orderWide = error.details.items?.[0];
+  if (orderWide) return orderWide;
+
   // What is left are delivery detail problems, shown next to their fields.
   return null;
 }
