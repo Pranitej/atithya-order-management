@@ -13,6 +13,10 @@ Built for the RaftLabs Senior Full Stack assessment.
 - **Live app:** https://atithya-kitchen.vercel.app
 - **Demo accounts:** on the sign-in page, "Continue as demo customer" and
   "Continue as kitchen staff" sign you in with one click.
+- **Full documentation:** [docs/DOCUMENTATION.md](docs/DOCUMENTATION.md), also
+  as a [PDF](docs/Atithya_Project_Documentation.pdf). A feature guide for
+  customers and kitchen staff, then the technical design, API, security and
+  tests in depth.
 
 ## What it does
 
@@ -25,7 +29,7 @@ Built for the RaftLabs Senior Full Stack assessment.
 | Real-time updates                         | The tracking page updates by itself over Server-Sent Events. The back end simulates the kitchen. |
 | REST API                                  | `/api/v1`, listed below.                                                                         |
 | Storage                                   | MongoDB.                                                                                         |
-| Tests                                     | 335 tests: API endpoints, business rules and key UI components.                                  |
+| Tests                                     | 339 tests: API endpoints, business rules and key UI components.                                  |
 
 Beyond the brief: accounts with JWT access and refresh tokens, a staff role,
 rate limiting, and a kitchen board at `/admin/orders`.
